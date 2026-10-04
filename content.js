@@ -8,8 +8,27 @@ const SkinRegistry = {
 
 let activeSkinInstance = null;
 
+window.switchSkin = function(skinName) {
+  if (!SkinRegistry[skinName]) return;
+  State.activeSkin = skinName;
+  localStorage.setItem('rj_active_skin', skinName);
+
+  if (activeSkinInstance) {
+    activeSkinInstance.unmount();
+  }
+
+  const SkinClass = SkinRegistry[skinName] || KaggleSkin;
+  activeSkinInstance = new SkinClass(State);
+  activeSkinInstance.mount();
+};
+
 function init() {
   if (isOldReddit) {
+    const savedSkin = localStorage.getItem('rj_active_skin');
+    if (savedSkin && SkinRegistry[savedSkin]) {
+      State.activeSkin = savedSkin;
+    }
+
     const posts = readOldRedditPosts();
     if (!posts.length) return;
     State.currentSubreddit = posts[0]?.subreddit || 'all';

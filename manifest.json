@@ -10,7 +10,8 @@
         "*://www.reddit.com/*"
       ],
       "css": [
-        "style.css"
+        "style.css",
+        "skins/jupyter/jupyter.css"
       ],
       "js": [
         "utils/icons.js",
@@ -20,6 +21,7 @@
         "core/media.js",
         "skins/base.js",
         "skins/kaggle/kaggle.js",
+        "skins/jupyter/jupyter.js",
         "content.js"
       ],
       "run_at": "document_idle"

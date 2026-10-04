@@ -36,25 +36,13 @@ class BaseSkin {
   }
 }
 
-// ─── FUTURE SKIN PLACEHOLDERS (Jupyter & VS Code) ─────────
-class JupyterSkin extends BaseSkin {
-  constructor(state) {
-    super('jupyter', state);
-  }
-  mount() {
-    console.log('Jupyter skin mounting... (Placeholder)');
-  }
-  renderPosts(posts) {}
-  appendPosts(newPosts) {}
-  updateStatus(statusText, isActive) {}
-}
-
+// ─── FUTURE SKIN PLACEHOLDER (VS Code) ───────────────────
 class VSCodeSkin extends BaseSkin {
   constructor(state) {
     super('vscode', state);
   }
   mount() {
-    console.log('VS Code skin mounting... (Placeholder)');
+    console.log('VS Code skin mounting... (Coming soon)');
   }
   renderPosts(posts) {}
   appendPosts(newPosts) {}

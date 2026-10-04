@@ -19,6 +19,10 @@ class KaggleSkin extends BaseSkin {
           <span id="rj-nb-draft">Draft saved</span>
         </div>
         <div id="rj-top-header-right">
+          <select id="rj-skin-switcher" style="background:var(--surface2); color:var(--text-white); border:1px solid var(--border); border-radius:4px; font-size:12px; padding:4px 8px; outline:none; cursor:pointer;">
+            <option value="kaggle" selected> Kaggle Notebook</option>
+            <option value="jupyter"> Jupyter Notebook</option>
+          </select>
           <button class="rj-share-btn">${ICONS.people} <span>Share</span></button>
           <button class="rj-save-btn" id="rj-theme-toggle" title="Save Version & toggle themes">
             ${ICONS.update} <span>Save Version</span> <span class="rj-ver-badge">0</span>
@@ -404,6 +408,12 @@ class KaggleSkin extends BaseSkin {
 
     notebook.querySelector('#rj-btn-power')?.addEventListener('click', () => {
       this.updateStatus('Draft Session off (run a cell to start)', false);
+    });
+
+    // Skin Switcher Dropdown
+    const skinSelect = notebook.querySelector('#rj-skin-switcher');
+    skinSelect?.addEventListener('change', (e) => {
+      window.switchSkin(e.target.value);
     });
 
     // Wire Modal Events

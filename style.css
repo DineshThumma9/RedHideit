@@ -102,17 +102,22 @@
 
 body > * { display: none !important; }
 
-#rj-notebook {
+#rj-notebook,
+#rj-jupyter-root,
+#rj-vscode-root {
   display:        flex !important;
   flex-direction: column;
   height:         100vh;
   width:          100vw;
+  overflow:       hidden;
+}
+
+#rj-notebook {
   background:     var(--page-bg);
   color:          var(--text-primary);
   font-family:    var(--font);
   font-size:      13px;
   line-height:    1.5;
-  overflow:       hidden;
 }
 
 /* ─── ROW 1: TOP HEADER (Full Width) ─────────────────────── */
