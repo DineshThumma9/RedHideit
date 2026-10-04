@@ -513,6 +513,15 @@ body > * { display: none !important; }
   border-color: #5f6368;
 }
 
+.rj-cell-wrapper.rj-cell-active .rj-cell-box,
+.rj-cell-wrapper.rj-cell-active .rj-markdown-cell {
+  border-color: var(--blue) !important;
+}
+
+.rj-cell-wrapper.rj-cell-active .rj-run-btn {
+  opacity: 1 !important;
+}
+
 .rj-code-cell {
   flex:        1;
   padding:     10px 14px;
@@ -663,6 +672,11 @@ body > * { display: none !important; }
   display:     flex;
   align-items: center;
   gap:         4px;
+}
+
+.rj-sub-badge:hover {
+  color: var(--blue);
+  text-decoration: underline;
 }
 
 .rj-cell-bottom-bar {

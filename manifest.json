@@ -1,20 +1,39 @@
 {
   "manifest_version": 3,
-  "name": "Reddit Jupy",
-  "version": "1.0",
-  "description": "Reddit as a Jupyter/Kaggle notebook interface",
+  "name": "RedHideIt - Notebook & IDE Disguise for Reddit",
+  "version": "1.0.0",
+  "description": "Disguise your Reddit browsing as an authentic Kaggle notebook and IDE environment.",
   "content_scripts": [
     {
       "matches": [
         "*://old.reddit.com/*",
         "*://www.reddit.com/*"
       ],
-      "css": ["style.css"],
-      "js": ["content.js"],
+      "css": [
+        "style.css"
+      ],
+      "js": [
+        "utils/icons.js",
+        "utils/dom.js",
+        "core/state.js",
+        "core/api.js",
+        "core/media.js",
+        "skins/base.js",
+        "skins/kaggle/kaggle.js",
+        "content.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "icons": {
-    "128": "icon.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "redhideit@extension",
+      "strict_min_version": "109.0"
+    }
   }
 }
