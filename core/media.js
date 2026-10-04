@@ -3,6 +3,7 @@
 // ─── RENDER MEDIA (Reddit Video, YouTube, Streamable, Gifs, Images, Selftext) ───
 async function renderMedia(post, el) {
   if (!el) return;
+  el.textContent = ''; // Safely clear container
   const url = post.url || '';
 
   // 1. Direct Reddit Video (v.redd.it)
@@ -31,57 +32,109 @@ async function renderMedia(post, el) {
   }
 
   if (redditVideoUrl) {
-    el.innerHTML = `
-      <video controls playsinline preload="metadata" style="width:100%; max-height:450px; background:#000;">
-        <source src="${escapeHtml(redditVideoUrl)}" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    `;
+    const video = document.createElement('video');
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.style.width = '100%';
+    video.style.maxHeight = '450px';
+    video.style.background = '#000';
+
+    const source = document.createElement('source');
+    source.src = redditVideoUrl;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+
+    el.appendChild(video);
     return;
   }
 
   // 2. YouTube Embeds
   const ytMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
   if (ytMatch && ytMatch[1]) {
-    el.innerHTML = `
-      <iframe width="100%" height="360" src="https://www.youtube.com/embed/${escapeHtml(ytMatch[1])}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:6px;"></iframe>
-    `;
+    const iframe = document.createElement('iframe');
+    iframe.width = '100%';
+    iframe.height = '360';
+    iframe.src = `https://www.youtube.com/embed/${encodeURIComponent(ytMatch[1])}`;
+    iframe.frameBorder = '0';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.style.borderRadius = '6px';
+    el.appendChild(iframe);
     return;
   }
 
   // 3. Streamable Embeds
   const streamableMatch = url.match(/streamable\.com\/([a-zA-Z0-9]+)/i);
   if (streamableMatch && streamableMatch[1]) {
-    el.innerHTML = `
-      <iframe src="https://streamable.com/e/${escapeHtml(streamableMatch[1])}" width="100%" height="360" frameborder="0" allowfullscreen style="border-radius:6px;"></iframe>
-    `;
+    const iframe = document.createElement('iframe');
+    iframe.width = '100%';
+    iframe.height = '360';
+    iframe.src = `https://streamable.com/e/${encodeURIComponent(streamableMatch[1])}`;
+    iframe.frameBorder = '0';
+    iframe.allowFullscreen = true;
+    iframe.style.borderRadius = '6px';
+    el.appendChild(iframe);
     return;
   }
 
   // 4. Imgur / RedGifs / Gfycat / Direct Video Files (.mp4, .webm, .gifv)
   if (/\.(mp4|webm)(\?.*)?$/i.test(url)) {
-    el.innerHTML = `<video controls playsinline preload="metadata" style="width:100%; max-height:450px;"><source src="${escapeHtml(url)}" type="video/mp4"></video>`;
+    const video = document.createElement('video');
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.style.width = '100%';
+    video.style.maxHeight = '450px';
+    const source = document.createElement('source');
+    source.src = url;
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    el.appendChild(video);
     return;
   }
+
   if (/\.gifv?$/i.test(url)) {
-    const mp4Url = url.replace(/\.gifv?$/i, '.mp4');
-    el.innerHTML = `<video controls autoplay loop muted playsinline style="width:100%; max-height:450px;"><source src="${escapeHtml(mp4Url)}" type="video/mp4"></video>`;
+    const video = document.createElement('video');
+    video.controls = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.style.width = '100%';
+    video.style.maxHeight = '450px';
+    const source = document.createElement('source');
+    source.src = url.replace(/\.gifv?$/i, '.mp4');
+    source.type = 'video/mp4';
+    video.appendChild(source);
+    el.appendChild(video);
     return;
   }
 
   // 5. Images (i.redd.it, imgur, png, jpg, gif, webp)
   if (/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url) || url.includes('i.redd.it') || (url.includes('imgur.com') && !url.includes('/a/'))) {
-    el.innerHTML = `<img src="${escapeHtml(url)}" alt="" loading="lazy">`;
+    const img = document.createElement('img');
+    img.src = url;
+    img.loading = 'lazy';
+    img.alt = 'Reddit media';
+    el.appendChild(img);
     return;
   }
 
   // 6. Text Post Selftext preview if available
   if (post.selftext && post.selftext.trim()) {
-    el.innerHTML = `
-      <div style="background:var(--page-bg); border:1px solid var(--border); border-radius:6px; padding:12px 14px; font-size:13px; color:var(--text-primary); max-height:300px; overflow-y:auto; white-space:pre-wrap;">
-        ${escapeHtml(post.selftext.trim())}
-      </div>
-    `;
+    const box = document.createElement('div');
+    box.style.background = 'var(--page-bg)';
+    box.style.border = '1px solid var(--border)';
+    box.style.borderRadius = '6px';
+    box.style.padding = '12px 14px';
+    box.style.fontSize = '13px';
+    box.style.color = 'var(--text-primary)';
+    box.style.maxHeight = '300px';
+    box.style.overflowY = 'auto';
+    box.style.whiteSpace = 'pre-wrap';
+    box.textContent = post.selftext.trim();
+    el.appendChild(box);
     return;
   }
 }

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "RedHideIt - Notebook & IDE Disguise for Reddit",
+  "name": "RedHideIt - Notebook Disguise",
   "version": "1.0.0",
   "description": "Disguise your Reddit browsing as an authentic Kaggle notebook and IDE environment.",
   "content_scripts": [
@@ -32,8 +32,13 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "redhideit@extension",
-      "strict_min_version": "109.0"
+      "id": "redhideit@dineshthumma.com",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   }
 }
