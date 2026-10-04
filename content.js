@@ -25,10 +25,10 @@ function readOldRedditPosts() {
     const titleEl = el.querySelector('p.title > a.title');
     posts.push({
       index:     i + 1,
-      postId:    el.getAttribute('data-fullname').replace('t3_', ''),
+      postId:    el.getAttribute('data-fullname')?.replace('t3_', '') || `post_${i}`,
       title:     titleEl?.textContent?.trim() || 'Untitled',
       author:    el.getAttribute('data-author')    || 'unknown',
-      subreddit: el.getAttribute('data-subreddit') || '',
+      subreddit: el.getAttribute('data-subreddit') || 'all',
       score:     el.getAttribute('data-score')     || '0',
       url:       el.getAttribute('data-url')       || '',
       permalink: el.getAttribute('data-permalink') || '',
@@ -38,7 +38,7 @@ function readOldRedditPosts() {
   return posts;
 }
 
-// ─── KAGGLE SVG ICONS ────────────────────────────────────
+// ─── SVG ICONS ───────────────────────────────────────────
 const ICONS = {
   hamburger: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`,
   plus:      `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`,
@@ -48,26 +48,25 @@ const ICONS = {
   arrowUp:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>`,
   arrowDown: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>`,
   play:      `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`,
-  power:     `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>`,
-  refresh:   `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>`,
-  more:      `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>`,
-  menu:      `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`,
+  more:      `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>`,
   folder:    `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>`,
   chevron:   `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>`,
   chevronUp: `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>`,
   upload:    `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>`,
   settings:  `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>`,
   notebook:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-8L4 8v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zm0 18H6V9h5V4h7v16z"/></svg>`,
+  file:      `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
+  power:     `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/></svg>`,
+  refresh:   `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>`,
 };
 
 // ─── BUILD NOTEBOOK ──────────────────────────────────────
 function buildNotebook(posts) {
-  const sub      = posts[0]?.subreddit || 'home';
+  const sub      = posts[0]?.subreddit || 'all';
   const notebook = document.createElement('div');
   notebook.id    = 'rj-notebook';
 
   notebook.innerHTML = `
-
     <!-- KAGGLE LEFT NAV BAR -->
     <nav id="rj-leftnav">
       <button class="rj-nav-icon active" title="Menu">${ICONS.hamburger}</button>
@@ -95,43 +94,39 @@ function buildNotebook(posts) {
       </button>
     </nav>
 
-    <!-- MAIN WRAPPER (nav + content) -->
+    <!-- MAIN WRAPPER -->
     <div id="rj-content-wrap">
 
-      <!-- TOP BAR: single row like Kaggle -->
+      <!-- TOP BAR: Title & Draft saved aligned horizontally, File/Edit menu, White Save Version button -->
       <div id="rj-topbar">
         <div id="rj-topbar-left">
-          <span id="rj-nb-icon">
-            <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
-              <path d="M8 2h6v10.5l9-10.5h6.5L21 15.5 30 30h-6.5L15 19V30H9L9 2H8z" fill="#20BEFF"/>
-            </svg>
-          </span>
-          <div id="rj-nb-name">
-            <span id="rj-nb-title">r/${sub}</span>
+          <div id="rj-title-group">
+            <span id="rj-nb-icon">📓</span>
+            <span id="rj-nb-title">r/${escapeHtml(sub)}</span>
             <span id="rj-nb-draft">Draft saved</span>
           </div>
+          <nav id="rj-menubar">
+            <span class="rj-menu-item">File</span>
+            <span class="rj-menu-item">Edit</span>
+            <span class="rj-menu-item">View</span>
+            <span class="rj-menu-item">Run</span>
+            <span class="rj-menu-item">Settings</span>
+            <span class="rj-menu-item">Add-ons</span>
+            <span class="rj-menu-item">Help</span>
+          </nav>
         </div>
-        <nav id="rj-menubar">
-          <span class="rj-menu-item">File</span>
-          <span class="rj-menu-item">Edit</span>
-          <span class="rj-menu-item">View</span>
-          <span class="rj-menu-item">Run</span>
-          <span class="rj-menu-item">Settings</span>
-          <span class="rj-menu-item">Add-ons</span>
-          <span class="rj-menu-item">Help</span>
-        </nav>
         <div id="rj-topbar-right">
           <button class="rj-top-btn rj-share-btn">Share</button>
-          <button class="rj-top-btn rj-save-btn" id="rj-theme-toggle">
+          <button class="rj-top-btn rj-save-btn" id="rj-theme-toggle" title="Click to toggle Dark / Light / Jupyter theme">
             Save Version&nbsp; <span class="rj-ver-badge">0</span>
           </button>
         </div>
       </div>
 
-      <!-- SECOND TOOLBAR: action bar -->
+      <!-- SECOND TOOLBAR: Action bar with 3-dot dropdown for restart/refresh/power -->
       <div id="rj-toolbar">
         <div id="rj-tb-left">
-          <button class="rj-tb-btn" title="Add cell">${ICONS.plus}</button>
+          <button class="rj-tb-btn" title="Add code cell">${ICONS.plus}</button>
           <button class="rj-tb-btn rj-tb-caret-btn" title="More add options">▾</button>
           <div class="rj-tb-sep"></div>
           <button class="rj-tb-btn" title="Cut">${ICONS.cut}</button>
@@ -141,8 +136,8 @@ function buildNotebook(posts) {
           <button class="rj-tb-btn" title="Move up">${ICONS.arrowUp}</button>
           <button class="rj-tb-btn" title="Move down">${ICONS.arrowDown}</button>
           <div class="rj-tb-sep"></div>
-          <button class="rj-tb-btn" title="Run cell">${ICONS.play}</button>
-          <button class="rj-tb-runall" title="Run all">▶▶&nbsp; Run All</button>
+          <button class="rj-tb-btn" id="rj-tb-run-first" title="Run cell">${ICONS.play}</button>
+          <button class="rj-tb-runall" id="rj-tb-run-all" title="Run all cells">▶▶&nbsp; Run All</button>
           <div class="rj-tb-sep"></div>
           <button class="rj-tb-dropdown">Code &nbsp;▾</button>
         </div>
@@ -150,17 +145,21 @@ function buildNotebook(posts) {
           <span id="rj-session-label">Draft Session off (run a cell to start)</span>
         </div>
         <div id="rj-tb-right">
-          <button class="rj-tb-btn" title="Restart kernel">${ICONS.power}</button>
-          <button class="rj-tb-btn" title="Refresh">${ICONS.refresh}</button>
-          <button class="rj-tb-btn" title="More options">${ICONS.more}</button>
+          <button class="rj-tb-btn" id="rj-tb-more-btn" title="Session options">${ICONS.more}</button>
           <button class="rj-tb-btn" id="rj-nb-toggle-btn" title="Toggle Notebook panel">${ICONS.notebook}</button>
+          
+          <!-- Dropdown menu hidden behind 3-dots -->
+          <div id="rj-tb-menu-dropdown">
+            <div class="rj-dropdown-item" id="rj-act-restart">${ICONS.refresh} Restart Kernel</div>
+            <div class="rj-dropdown-item" id="rj-act-power">${ICONS.power} Power Off Session</div>
+            <div class="rj-dropdown-item" id="rj-act-settings">${ICONS.settings} Session Settings</div>
+          </div>
         </div>
       </div>
 
       <!-- NOTEBOOK CELLS AREA -->
       <div id="rj-main">
         <div id="rj-cells"></div>
-        <!-- Add cell between buttons appear at bottom -->
         <div class="rj-add-cell-row">
           <button class="rj-add-cell-btn">+ Code</button>
           <button class="rj-add-cell-btn">+ Markdown</button>
@@ -174,96 +173,111 @@ function buildNotebook(posts) {
           <button id="rj-panel-close" title="Close">✕</button>
         </div>
 
-        <!-- Input section -->
-        <div class="rj-panel-section">
-          <div class="rj-ps-header" data-section="input">
-            <span>Input</span>
-            <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
-          </div>
-          <div class="rj-ps-body" id="rj-ps-input">
-            <div class="rj-ps-btns">
-              <button class="rj-ps-btn">${ICONS.plus}&nbsp; Add Input</button>
-              <button class="rj-ps-btn">${ICONS.upload}&nbsp; Upload</button>
+        <div class="rj-panel-content">
+          <!-- Input section -->
+          <div class="rj-panel-section">
+            <div class="rj-ps-header" data-section="input">
+              <span>Input</span>
+              <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
             </div>
-            <div class="rj-ps-empty">
-              <div class="rj-ps-empty-img">
-                <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
-                  <circle cx="40" cy="40" r="38" fill="#F0F8FF" stroke="#E0E0E0" stroke-width="1"/>
-                  <rect x="22" y="26" width="36" height="30" rx="3" fill="#E3F2FD" stroke="#BBDEFB" stroke-width="1"/>
-                  <rect x="28" y="32" width="24" height="3" rx="1" fill="#90CAF9"/>
-                  <rect x="28" y="39" width="18" height="3" rx="1" fill="#90CAF9"/>
-                  <rect x="28" y="46" width="21" height="3" rx="1" fill="#90CAF9"/>
-                  <circle cx="57" cy="55" r="12" fill="#2196F3"/>
-                  <path d="M51 55h12M57 49v12" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
+            <div class="rj-ps-body" id="rj-ps-input">
+              <div class="rj-ps-btns">
+                <button class="rj-ps-btn">${ICONS.plus}&nbsp; Add Input</button>
+                <button class="rj-ps-btn">${ICONS.upload}&nbsp; Upload</button>
               </div>
-              <p class="rj-ps-empty-title">No input attached</p>
-              <p class="rj-ps-empty-sub">Attach a Kaggle dataset, model, or competition</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Output section -->
-        <div class="rj-panel-section">
-          <div class="rj-ps-header" data-section="output">
-            <span>Output</span>
-            <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
-          </div>
-          <div class="rj-ps-body" id="rj-ps-output">
-            <div class="rj-ps-output-row">
-              <span class="rj-ps-folder">${ICONS.folder}&nbsp; /kaggle/working</span>
-              <button class="rj-ps-icon-btn">${ICONS.settings}</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Table of contents -->
-        <div class="rj-panel-section">
-          <div class="rj-ps-header" data-section="toc">
-            <span>Table of contents</span>
-            <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
-          </div>
-          <div class="rj-ps-body" id="rj-ps-toc">
-            <div class="rj-ps-empty">
-              <div class="rj-ps-empty-img">
-                <svg width="64" height="64" viewBox="0 0 80 80" fill="none">
-                  <circle cx="40" cy="40" r="38" fill="#FAFAFA" stroke="#E0E0E0" stroke-width="1"/>
-                  <rect x="22" y="22" width="36" height="38" rx="3" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
-                  <rect x="28" y="30" width="24" height="3" rx="1" fill="#BDBDBD"/>
-                  <rect x="28" y="37" width="18" height="2" rx="1" fill="#BDBDBD"/>
-                  <rect x="28" y="43" width="21" height="2" rx="1" fill="#BDBDBD"/>
-                  <rect x="28" y="49" width="15" height="2" rx="1" fill="#BDBDBD"/>
-                </svg>
+              <div class="rj-ps-dataset-card">
+                <div class="rj-ps-dataset-header">
+                  <span class="rj-ps-dataset-title">${ICONS.folder} r/${escapeHtml(sub)}_feed</span>
+                  <span class="rj-ps-dataset-size">1.4 MB</span>
+                </div>
+                <div class="rj-ps-file-list">
+                  <div class="rj-ps-file-item">${ICONS.file} posts.csv (${posts.length} rows)</div>
+                  <div class="rj-ps-file-item">${ICONS.file} comments.json</div>
+                </div>
               </div>
-              <p class="rj-ps-empty-title">No sections detected</p>
-              <p class="rj-ps-empty-sub">Add markdown headers to add a section</p>
             </div>
-            <div id="rj-toc-list"></div>
           </div>
-        </div>
 
-        <!-- Session options (collapsed) -->
-        <div class="rj-panel-section">
-          <div class="rj-ps-header rj-ps-collapsed" data-section="session">
-            <span>Session options</span>
-            <span class="rj-ps-chevron">${ICONS.chevron}</span>
+          <!-- Output section -->
+          <div class="rj-panel-section">
+            <div class="rj-ps-header" data-section="output">
+              <span>Output</span>
+              <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
+            </div>
+            <div class="rj-ps-body" id="rj-ps-output">
+              <div class="rj-ps-output-box">
+                <div class="rj-ps-output-row">
+                  <span class="rj-ps-folder">${ICONS.folder}&nbsp; /kaggle/working</span>
+                  <button class="rj-ps-icon-btn">${ICONS.settings}</button>
+                </div>
+                <div class="rj-ps-file-list">
+                  <div class="rj-ps-file-item">${ICONS.file} submission.csv</div>
+                  <div class="rj-ps-file-item">${ICONS.file} analysis_output.json</div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Schedule (collapsed) -->
-        <div class="rj-panel-section">
-          <div class="rj-ps-header rj-ps-collapsed" data-section="schedule">
-            <span>Schedule a notebook to run</span>
-            <span class="rj-ps-chevron">${ICONS.chevron}</span>
+          <!-- Table of contents -->
+          <div class="rj-panel-section">
+            <div class="rj-ps-header" data-section="toc">
+              <span>Table of contents</span>
+              <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
+            </div>
+            <div class="rj-ps-body" id="rj-ps-toc">
+              <div id="rj-toc-list"></div>
+            </div>
+          </div>
+
+          <!-- Session options (collapsed) -->
+          <div class="rj-panel-section">
+            <div class="rj-ps-header" data-section="session">
+              <span>Session options</span>
+              <span class="rj-ps-chevron">${ICONS.chevronUp}</span>
+            </div>
+            <div class="rj-ps-body" id="rj-ps-session">
+              <div class="rj-ps-session-list">
+                <div class="rj-ps-session-item">
+                  <span class="rj-ps-session-label">Accelerator</span>
+                  <span class="rj-ps-session-val">GPU T4 x2 ▾</span>
+                </div>
+                <div class="rj-ps-session-item">
+                  <span class="rj-ps-session-label">Language</span>
+                  <span class="rj-ps-session-val">Python 3.10.12</span>
+                </div>
+                <div class="rj-ps-session-item">
+                  <span class="rj-ps-session-label">Persistence</span>
+                  <span class="rj-ps-session-val">Files only</span>
+                </div>
+                <div class="rj-ps-session-item">
+                  <span class="rj-ps-session-label">Internet</span>
+                  <span class="rj-ps-session-val rj-ps-toggle-active">ON</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Schedule (collapsed) -->
+          <div class="rj-panel-section">
+            <div class="rj-ps-header rj-ps-collapsed" data-section="schedule">
+              <span>Schedule a notebook to run</span>
+              <span class="rj-ps-chevron">${ICONS.chevron}</span>
+            </div>
+            <div class="rj-ps-body" id="rj-ps-schedule" style="display:none">
+              <div class="rj-ps-empty">
+                <p class="rj-ps-empty-title">No schedule set</p>
+                <p class="rj-ps-empty-sub">Run once or create a recurring schedule</p>
+              </div>
+            </div>
           </div>
         </div>
 
       </aside>
 
       <!-- Right edge toggle tab (small bookmark tab) -->
-      <button id="rj-panel-tab" title="Toggle Notebook panel">
+      <button id="rj-panel-tab" class="panel-open" title="Toggle Notebook panel">
         <svg width="10" height="16" viewBox="0 0 10 24" fill="currentColor">
-          <path d="M8 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M2 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
         </svg>
       </button>
 
@@ -274,13 +288,22 @@ function buildNotebook(posts) {
   const cellsEl  = notebook.querySelector('#rj-cells');
   const tocList  = notebook.querySelector('#rj-toc-list');
 
-  posts.forEach(post => {
+  posts.forEach((post) => {
     cellsEl.appendChild(buildCell(post));
     const ti = document.createElement('div');
-    ti.className  = 'rj-toc-item';
-    ti.textContent = post.title.slice(0, 42) + (post.title.length > 42 ? '…' : '');
-    ti.addEventListener('click', () =>
-      document.getElementById(`rj-cell-${post.postId}`)?.scrollIntoView({ behavior: 'smooth' }));
+    ti.className = 'rj-toc-item';
+    ti.id = `rj-toc-item-${post.postId}`;
+    ti.innerHTML = `<span class="rj-toc-badge">[${post.index}]</span> <span>${escapeHtml(post.title.slice(0, 38))}${post.title.length > 38 ? '…' : ''}</span>`;
+    ti.addEventListener('click', () => {
+      const cellEl = document.getElementById(`rj-cell-${post.postId}`);
+      if (cellEl) {
+        cellEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        cellEl.classList.add('active');
+        setTimeout(() => cellEl.classList.remove('active'), 1200);
+      }
+      notebook.querySelectorAll('.rj-toc-item').forEach(el => el.classList.remove('active'));
+      ti.classList.add('active');
+    });
     tocList.appendChild(ti);
   });
 
@@ -291,20 +314,43 @@ function buildNotebook(posts) {
   const tbToggle = notebook.querySelector('#rj-nb-toggle-btn');
 
   function togglePanel() {
-    const open = panel.classList.toggle('open');
-    tab.classList.toggle('panel-open', open);
-    tab.innerHTML = open
+    const isOpen = panel.classList.toggle('open');
+    tab.classList.toggle('panel-open', isOpen);
+    tab.innerHTML = isOpen
       ? `<svg width="10" height="16" viewBox="0 0 10 24" fill="currentColor"><path d="M2 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`
       : `<svg width="10" height="16" viewBox="0 0 10 24" fill="currentColor"><path d="M8 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`;
   }
 
-  // Open panel by default (Kaggle default)
+  // Open panel by default
   panel.classList.add('open');
-  tab.innerHTML = `<svg width="10" height="16" viewBox="0 0 10 24" fill="currentColor"><path d="M2 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`;
+  tab.classList.add('panel-open');
 
   tab.addEventListener('click', togglePanel);
   closeBtn.addEventListener('click', togglePanel);
   tbToggle.addEventListener('click', togglePanel);
+
+  // 3-Dot More Menu dropdown toggle
+  const moreBtn = notebook.querySelector('#rj-tb-more-btn');
+  const dropdown = notebook.querySelector('#rj-tb-menu-dropdown');
+  moreBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('show');
+  });
+
+  document.addEventListener('click', () => {
+    dropdown.classList.remove('show');
+  });
+
+  notebook.querySelector('#rj-act-restart')?.addEventListener('click', () => {
+    document.getElementById('rj-session-label').textContent = 'Kernel restarting…';
+    setTimeout(() => {
+      document.getElementById('rj-session-label').textContent = 'Draft Session Active (Kernel ready)';
+    }, 1000);
+  });
+
+  notebook.querySelector('#rj-act-power')?.addEventListener('click', () => {
+    document.getElementById('rj-session-label').textContent = 'Draft Session off (run a cell to start)';
+  });
 
   // Collapsible panel sections
   notebook.querySelectorAll('.rj-ps-header').forEach(hdr => {
@@ -312,15 +358,27 @@ function buildNotebook(posts) {
       const sectionId = hdr.dataset.section;
       const body = document.getElementById(`rj-ps-${sectionId}`);
       if (!body) return;
-      const collapsed = body.style.display === 'none';
-      body.style.display = collapsed ? 'block' : 'none';
+      const isHidden = body.style.display === 'none';
+      body.style.display = isHidden ? 'block' : 'none';
       hdr.querySelector('.rj-ps-chevron').innerHTML =
-        collapsed ? ICONS.chevronUp : ICONS.chevron;
+        isHidden ? ICONS.chevronUp : ICONS.chevron;
     });
   });
 
   // Theme toggle on Save Version button
   notebook.querySelector('#rj-theme-toggle').addEventListener('click', toggleTheme);
+
+  // Run all button
+  notebook.querySelector('#rj-tb-run-all')?.addEventListener('click', () => {
+    posts.slice(0, 5).forEach((p, idx) => {
+      setTimeout(() => handleRun(p), idx * 600);
+    });
+  });
+
+  // Run first cell
+  notebook.querySelector('#rj-tb-run-first')?.addEventListener('click', () => {
+    if (posts[0]) handleRun(posts[0]);
+  });
 
   document.body.appendChild(notebook);
 }
@@ -332,8 +390,9 @@ function toggleTheme() {
   const idx = themes.indexOf(currentTheme);
   currentTheme = themes[(idx + 1) % themes.length];
   document.documentElement.setAttribute('data-theme', currentTheme);
+  const label = currentTheme === 'dark' ? 'Dark' : (currentTheme === 'kaggle' ? 'Light' : 'Jupyter');
   document.querySelector('#rj-theme-toggle').innerHTML =
-    `${currentTheme[0].toUpperCase() + currentTheme.slice(1)} &nbsp;<span class="rj-ver-badge">0</span>`;
+    `Save Version &nbsp;<span class="rj-ver-badge">${label}</span>`;
 }
 
 // ─── BUILD CELL ──────────────────────────────────────────
@@ -342,8 +401,10 @@ function buildCell(post) {
   wrapper.className = 'rj-cell-wrapper';
   wrapper.id        = `rj-cell-${post.postId}`;
 
-  // Format post as code/markdown cell content
-  const metaComment = `# r/${post.subreddit}  ·  u/${post.author}  ·  ▲ ${Number(post.score||0).toLocaleString()}${post.domain && !post.domain.startsWith('self.') ? '  ·  '+post.domain : ''}`;
+  const safeSub    = escapeHtml(post.subreddit);
+  const safeAuthor = escapeHtml(post.author);
+  const safeScore  = Number(post.score || 0).toLocaleString();
+  const safeUrl    = escapeHtml(post.url || `https://old.reddit.com${post.permalink}`);
 
   wrapper.innerHTML = `
     <!-- INPUT ROW -->
@@ -353,12 +414,14 @@ function buildCell(post) {
         <span class="rj-gutter-num">[ ]:</span>
       </div>
       <div class="rj-cell-box">
-        <!-- Code-style cell content -->
+        <!-- Python data science code cell -->
         <div class="rj-code-cell">
-          <span class="rj-code-comment"># ${post.title}</span>
-          <span class="rj-code-comment rj-code-meta">${metaComment}</span>
-          <span class="rj-code-blank"> </span>
-          <span class="rj-code-line"><span class="rj-kw">post_url</span> <span class="rj-op">=</span> <span class="rj-str">"https://old.reddit.com${post.permalink}"</span></span>
+          <span class="rj-code-comment"># [Cell ${post.index}] ${escapeHtml(post.title)}</span>
+          <span class="rj-code-comment rj-code-meta"># r/${safeSub} · author: u/${safeAuthor} · score: ${safeScore}</span>
+          <span class="rj-code-blank"></span>
+          <span class="rj-code-line"><span class="rj-var">post_id</span> <span class="rj-op">=</span> <span class="rj-str">"${post.postId}"</span></span>
+          <span class="rj-code-line"><span class="rj-var">url</span> <span class="rj-op">=</span> <span class="rj-str">"${safeUrl}"</span></span>
+          <span class="rj-code-line"><span class="rj-var">comments_df</span> <span class="rj-op">=</span> <span class="rj-var">pd</span>.<span class="rj-func">read_json</span>(<span class="rj-str">f"https://old.reddit.com${post.permalink}.json"</span>)</span>
         </div>
         <!-- Hover action buttons (right side, like Kaggle) -->
         <div class="rj-cell-actions">
@@ -407,7 +470,7 @@ async function handleRun(post) {
   outputRow.style.display = 'flex';
   wrapper.classList.add('ran');
   numEl.textContent = `[*]:`;
-  document.getElementById('rj-session-label').textContent = 'Kernel busy…';
+  document.getElementById('rj-session-label').textContent = 'Draft Session Active (Kernel running)';
 
   if (!commentOffsets[post.postId]) {
     commentOffsets[post.postId] = 0;
@@ -424,10 +487,14 @@ async function handleRun(post) {
     commentsEl.querySelector('.rj-load-more')?.remove();
 
     if (!comments.length) {
-      commentsEl.innerHTML += `<div class="rj-no-more">── end of thread ──</div>`;
+      if (offset === 0) {
+        commentsEl.innerHTML = `<div class="rj-no-more">── no comments found ──</div>`;
+      } else {
+        commentsEl.innerHTML += `<div class="rj-no-more">── end of thread ──</div>`;
+      }
       numEl.textContent = `[${post.index}]:`;
       btn.innerHTML = '▶'; btn.disabled = false;
-      document.getElementById('rj-session-label').textContent = 'Draft Session off (run a cell to start)';
+      document.getElementById('rj-session-label').textContent = 'Draft Session Active (Kernel ready)';
       return;
     }
 
@@ -435,8 +502,8 @@ async function handleRun(post) {
       const div = document.createElement('div');
       div.className = 'rj-comment';
       div.innerHTML = `
-        <div class="rj-c-author">u/${c.author} <span class="rj-c-score">▲ ${c.score}</span></div>
-        <div class="rj-c-body">${c.body}</div>
+        <div class="rj-c-author">u/${escapeHtml(c.author)} <span class="rj-c-score">▲ ${Number(c.score || 0).toLocaleString()}</span></div>
+        <div class="rj-c-body">${escapeHtml(c.body)}</div>
       `;
       commentsEl.appendChild(div);
     });
@@ -446,17 +513,17 @@ async function handleRun(post) {
 
     const loadMore    = document.createElement('button');
     loadMore.className = 'rj-load-more';
-    loadMore.textContent = '▶  Load 5 more comments';
+    loadMore.textContent = '▶  Load more comments';
     loadMore.addEventListener('click', () => handleRun(post));
     commentsEl.appendChild(loadMore);
 
   } catch (err) {
-    commentsEl.innerHTML += `<div class="rj-error">${err.message}</div>`;
+    commentsEl.innerHTML += `<div class="rj-error">Error fetching comments: ${escapeHtml(err.message)}</div>`;
     numEl.textContent = `[${post.index}]:`;
   }
 
   btn.innerHTML = '▶'; btn.disabled = false;
-  document.getElementById('rj-session-label').textContent = 'Draft Session off (run a cell to start)';
+  document.getElementById('rj-session-label').textContent = 'Draft Session Active (Kernel ready)';
 }
 
 // ─── FETCH COMMENTS ──────────────────────────────────────
@@ -474,10 +541,21 @@ async function fetchComments(post, offset = 0) {
 function renderMedia(post, el) {
   const url = post.url || '';
   if (/\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i.test(url) || url.includes('i.redd.it')) {
-    el.innerHTML = `<img src="${url}" alt="" loading="lazy">`;
+    el.innerHTML = `<img src="${escapeHtml(url)}" alt="" loading="lazy">`;
   } else if (url.includes('v.redd.it')) {
-    el.innerHTML = `<video controls><source src="${url}/DASH_480.mp4" type="video/mp4"></video>`;
+    el.innerHTML = `<video controls><source src="${escapeHtml(url)}/DASH_480.mp4" type="video/mp4"></video>`;
   } else if (/\.gifv?$/i.test(url)) {
-    el.innerHTML = `<video autoplay loop muted playsinline><source src="${url.replace('.gifv','.mp4')}" type="video/mp4"></video>`;
+    el.innerHTML = `<video autoplay loop muted playsinline><source src="${escapeHtml(url.replace('.gifv','.mp4'))}" type="video/mp4"></video>`;
   }
+}
+
+// ─── HELPER ──────────────────────────────────────────────
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
