@@ -1,4 +1,4 @@
-# 🛒 RedHideIt — Notebook & IDE Disguise for Reddit
+# RedHideIt — Notebook & IDE Disguise for Reddit
 
 <p align="center">
   <img src="icons/icon128.png" width="96" height="96" alt="RedHideIt Logo" />
