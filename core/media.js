@@ -16,7 +16,10 @@ async function renderMedia(post, el) {
   if (!redditVideoUrl && (url.includes('v.redd.it') || post.isVideo)) {
     try {
       if (post.permalink) {
-        const res = await fetch(`https://old.reddit.com${post.permalink}.json?limit=1`);
+        const cleanPermalink = post.permalink.startsWith('http')
+          ? new URL(post.permalink).pathname
+          : (post.permalink.startsWith('/') ? post.permalink : `/${post.permalink}`);
+        const res = await fetch(`${cleanPermalink.replace(/\/+$/, '')}.json?limit=1`);
         if (res.ok) {
           const data = await res.json();
           const opPost = data[0]?.data?.children?.[0]?.data;

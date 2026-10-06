@@ -2,19 +2,31 @@
 
 const isOldReddit = location.hostname === 'old.reddit.com';
 
+// ─── EXTRACT SUBREDDIT FROM CURRENT URL ───────────────────
+function extractSubredditFromUrl() {
+  const path = location.pathname;
+  const match = path.match(/^\/r\/([^\/\?\#]+)/i);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return 'all';
+}
+
 // ─── FETCH SUBREDDIT POSTS ───────────────────────────────
 async function fetchSubredditPosts(subreddit, afterToken = null, limit = 25) {
   try {
-    const url = `https://old.reddit.com/r/${subreddit}.json?limit=${limit}${afterToken ? `&after=${afterToken}` : ''}`;
+    const sub = subreddit || 'all';
+    const endpoint = `/r/${encodeURIComponent(sub)}.json`;
+    const url = `${endpoint}?limit=${limit}${afterToken ? `&after=${afterToken}` : ''}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
 
     const data = await response.json();
-    State.afterToken = data.data.after;
+    State.afterToken = data.data?.after || null;
 
-    const posts = data.data.children.map(post => {
+    const posts = (data.data?.children || []).map(post => {
       const p = post.data;
       return {
         postId:                p.id,
@@ -46,7 +58,7 @@ async function fetchSubredditPosts(subreddit, afterToken = null, limit = 25) {
 // ─── SEARCH SUBREDDITS ───────────────────────────────────
 async function searchSubreddits(query) {
   try {
-    const results = await fetch(`https://old.reddit.com/subreddits/search.json?q=${encodeURIComponent(query)}&limit=10`);
+    const results = await fetch(`/subreddits/search.json?q=${encodeURIComponent(query)}&limit=10`);
     if (!results.ok) {
       throw new Error(`HTTP ${results.status}`);
     }
@@ -67,7 +79,10 @@ async function searchSubreddits(query) {
 // ─── FETCH THREAD COMMENTS ───────────────────────────────
 async function fetchThreadComments(permalink, offset = 0, limit = 5) {
   try {
-    const url = `https://old.reddit.com${permalink}.json?limit=50`;
+    const cleanPermalink = permalink.startsWith('http')
+      ? new URL(permalink).pathname
+      : (permalink.startsWith('/') ? permalink : `/${permalink}`);
+    const url = `${cleanPermalink.replace(/\/+$/, '')}.json?limit=50`;
     const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`HTTP status code: ${res.status}`);
